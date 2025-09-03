@@ -1,4 +1,4 @@
-# AWS IAM-Users and Group Management using Terraform
+# AWS IAM Users and Group Management using Terraform
 Infrastructure as Code for IAM User &amp; Group Management. This repository contains Terraform configurations to manage AWS IAM users, groups, policies, and MFA enforcement. It demonstrates best practices in least-privilege access, remote state management, and account baseline setup.
 
 Uses **Terraform** to manage AWS IAM identities — creating **users, groups, and policies** — while applying **secure defaults** such as MFA enforcement and strong password policies.
