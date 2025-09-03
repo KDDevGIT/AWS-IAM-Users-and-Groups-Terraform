@@ -5,7 +5,7 @@ Uses **Terraform** to manage AWS IAM identities — creating **users, groups, an
 
 ---
 
-## 🚀 Features
+## Features
 - **Remote State** stored in S3 with DynamoDB locking  
 - **Account Alias** for cleaner AWS console URLs  
 - **Password Policy** enforcing complexity & rotation  
@@ -16,7 +16,7 @@ Uses **Terraform** to manage AWS IAM identities — creating **users, groups, an
 
 ---
 
-## 🛠️ Prerequisites
+## Prerequisites
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.6  
 - [AWS CLI](https://docs.aws.amazon.com/cli/) v2  
 - AWS account with a **bootstrap admin user** (not root)  
