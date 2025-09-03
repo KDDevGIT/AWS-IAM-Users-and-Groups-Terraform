@@ -30,3 +30,46 @@ aws dynamodb create-table \
   --key-schema AttributeName=LockID,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST
 ```
+
+# Setup and Usage
+## Intialize Terraform
+```bash
+cd iam-baseline
+terraform init -backend-config=envs/dev/backend.hcl
+```
+
+## Plan Changes
+```bash
+terraform plan -var-file=envs/dev/terraform.tfvars
+```
+
+## Apply Changes
+```bash
+terraform apply -var-file=envs/dev/terraform.tfvars
+```
+
+## Example: Adding a new user
+```bash
+users = {
+  "alice" = {}
+  "bob"   = {}
+  "carol" = {}
+}
+
+group_membership = {
+  "admins"  = ["alice"]
+  "readers" = ["bob", "carol"]
+}
+```
+
+## Run
+```bash
+terraform plan -var-file=envs/dev/terraform.tfvars
+terraform apply -var-file=envs/dev/terraform.tfvars
+```
+
+## Output
+```bash
+https://youracct-dev.signin.aws.amazon.com/console
+```
+
