@@ -98,3 +98,8 @@ resource "aws_iam_user_policy_attachment" "mfa_enforce_attach" {
   user = aws_iam_user.users[each.key].name
   policy_arn = aws_iam_policy.deny_without_mfa[0].arn
 }
+
+# Console URL
+output "console_login_url" {
+  value = "https://${aws_iam_account_alias.this.account_alias}.signin.aws.amazon.com/console"
+}
