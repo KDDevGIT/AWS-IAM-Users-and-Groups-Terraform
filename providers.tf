@@ -38,3 +38,17 @@ resource "aws_iam_group" "groups" {
   name = each.key
 }
 
+# Attach AWS Managed/Custom Policies to Groups
+resource "aws_iam_group_policy_attachment" "aws_managed_attach" {
+  for_each = {
+     for g, cfg in var.groups :
+     "${g}-aws" => {
+        group = g 
+        policies = [for p in lookup(cfg,"attached_policies",[]) : p if startswith(p,"aws:")]
+     }
+  }
+
+  group = aws_iam_group.groups[each.value.group].name
+  policy_arn = local.aws_managed[element(each.value.policies,0)]
+}
+
