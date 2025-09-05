@@ -53,11 +53,18 @@ resource "aws_iam_group_policy_attachment" "aws_managed_attach" {
 }
 
 # Custom Policy Attachment
-resource "aws_iam_group_policy_attachment "custom_attach" {
+resource "aws_iam_group_policy_attachment" "custom_attach" {
   for_each = {
     for g, cfg in var.groups :
-    g => [for p in lookup(cfg,"attached_policies",[]) : p if !startswith(p,"aws")]
+    g => [for p in lookup(cfg,"attached_policies",[]) : p if !startswith(p,"aws:")]
   }
   group = aws_iam_group.groups[each.key].name 
   policy_arn = aws_iam_policy.custom[each.value[0]].arn 
+}
+
+# Group Membership
+resource "aws_iam_user_group_membership" "membership" {
+  for_each = var.group_membership
+  user = aws_iam_user.users[each.value[0]].name
+  groups = [aws_iam_group.groups[each.key].name]
 }
