@@ -15,3 +15,26 @@ resource "aws_iam_account_password_policy" "this" {
   max_password_age = var.password_policy.max_password_age
   password_reuse_prevention = var.password_policy.password_reuse_prevention
 }
+
+# Users (no password)
+resource "aws_iam_user" "users" {
+  for_each = var.users
+  name = each.key
+  tags = var.tags
+}
+
+# Custom Managed Policies
+resource "aws_iam_policy" "custom" {
+  for_each = var.managed_policies
+  name = each.key
+  description = lookup(each.value, "description",null)
+  policy = each.value.policy_json
+  tags = var.tags
+}
+
+# Groups
+resource "aws_iam_group" "groups" {
+  for_each = var.groups
+  name = each.key
+}
+
