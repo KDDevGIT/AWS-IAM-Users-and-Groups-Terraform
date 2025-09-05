@@ -68,3 +68,33 @@ resource "aws_iam_user_group_membership" "membership" {
   user = aws_iam_user.users[each.value[0]].name
   groups = [aws_iam_group.groups[each.key].name]
 }
+
+# MFA Enforcement
+data "aws_iam_policy_document" "deny_without_mfa" {
+  statement {
+    sid = "DenyAllIfNoMFA"
+    effect = "Deny"
+    actions = ["*"]
+    resources = ["*"]
+    condition {
+      test = "BoolIfExists"
+      variable = "aws:MultiFactorAuthPresent"
+      values = ["false"]
+    }
+  }
+}
+
+# Global MFA Enforcement
+resource "aws_iam_policy" "deny_without_mfa" {
+  count = var.enforce_mfa_policy ? 1 : 0
+  name = "DenyAllIfNoMFA"
+  policy = data.aws_iam_policy_document.deny_without_mfa.json
+  tags = var.tags
+}
+
+# Attach MFA Enforcement to all users
+resource "aws_iam_user_policy_attachment" "mfa_enforce_attach" {
+  for_each = var.enforce_mfa_policy ? var.users : {}
+  user = aws_iam_user.users[each.key].name
+  policy_arn = aws_iam_policy.deny_without_mfa[0].arn
+}
