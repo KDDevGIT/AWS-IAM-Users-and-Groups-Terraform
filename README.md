@@ -23,12 +23,17 @@ Uses **Terraform** to manage AWS IAM identities — creating **users, groups, an
 - S3 bucket & DynamoDB table for state (create once manually):
 
 ```bash
-aws s3api create-bucket --bucket tf-state-youracct-dev --region us-east-1
+aws s3api create-bucket \
+--bucket iam-users-and-groups \
+--region us-west-1 \
+--create-bucket-configuration LocationConstraint=us-west-1
+
 aws dynamodb create-table \
-  --table-name tf-lock-youracct-dev \
-  --attribute-definitions AttributeName=LockID,AttributeType=S \
-  --key-schema AttributeName=LockID,KeyType=HASH \
-  --billing-mode PAY_PER_REQUEST
+--table-name iam-uag-table \
+--attribute-definitions AttributeName=LockID,AttributeType=S \
+--key-schema AttributeName=LockID,KeyType=HASH \
+--billing-mode PAY_PER_REQUEST \
+--region us-west-1 
 ```
 
 # Setup and Usage
