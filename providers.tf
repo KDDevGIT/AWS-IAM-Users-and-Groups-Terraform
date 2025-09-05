@@ -52,3 +52,12 @@ resource "aws_iam_group_policy_attachment" "aws_managed_attach" {
   policy_arn = local.aws_managed[element(each.value.policies,0)]
 }
 
+# Custom Policy Attachment
+resource "aws_iam_group_policy_attachment "custom_attach" {
+  for_each = {
+    for g, cfg in var.groups :
+    g => [for p in lookup(cfg,"attached_policies",[]) : p if !startswith(p,"aws")]
+  }
+  group = aws_iam_group.groups[each.key].name 
+  policy_arn = aws_iam_policy.custom[each.value[0]].arn 
+}
