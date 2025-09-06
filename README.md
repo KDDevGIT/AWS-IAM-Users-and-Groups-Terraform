@@ -16,7 +16,7 @@ Uses **Terraform** to manage AWS IAM identities — creating **users, groups, an
 
 ---
 
-## Prerequisites
+# Prerequisites
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.6  
 - [AWS CLI](https://docs.aws.amazon.com/cli/) v2  
 - AWS account with a **bootstrap admin user** (not root)  
@@ -36,35 +36,89 @@ aws dynamodb create-table \
 --region us-west-1 
 ```
 
-# Setup and Usage
+# Setup and Usage 
+## Example backend in .hcl
+```bash
+bucket = "iam_users_and_groups"
+key = "iam/terraform.tfstate"
+region = "us-west-1"
+dynamodb_table = "iam-uag-table"
+encrypt = true
+```
+# Example Configuration (TFVARS)
+## Header
+```bash
+aws_region = "us-west-1"
+aws_profile = "bootstrap_admin"
+account_alias = "bucket-dev"
+```
+## Define Password Policy
+```bash
+password_policy = {
+    minimum_password_length = <NUMBER>
+    require_lowercase_characters = true/false
+    require_uppercase_characters = true/false
+    require_numbers = true/false
+    require_symbols = true/false
+    allow_users_to_change_password = true/false
+    hard_expiry = true/false
+    max_password_age = <NUMBER>
+    password_reuse_prevention = <NUMBER>
+}
+```
+## Define Users
+```bash 
+users = {
+    "USER" = { # Name 
+        pgp_key = null
+    }
+}
+```
+## Define Groups
+```bash
+groups = {
+    "ROLE" = {
+        attached_policies = ["aws:<AWS_GROUP_NAME>"]
+    }
+}
+```
+## Custom Managed Policies
+```bash
+managed_policies = {
+    "POLICY" = {
+        description = "Allow viewing billing info"
+        policy_json = jsonencode({
+            Version = "2012-10-17"
+            Statement = [{
+                Effect = "Allow"
+                Action = [""]
+                Resource = "*"
+            }]
+        })
+    }
+}
+```
+## Group Membership
+```bash 
+group_membership = {
+    "ROLE" = ["USER"]
+}
+```
+## Toggle Global MFA Policy
+```bash
+enforce_mfa_policy = true/false
+```
+## Tags
+```bash
+tags = {
+    project = "iam_baseline"
+    env = "dev"
+}
+```
 ## Intialize Terraform
 ```bash
 cd iam-baseline
 terraform init -backend-config=envs/dev/backend.hcl
-```
-
-## Plan Changes
-```bash
-terraform plan -var-file=envs/dev/terraform.tfvars
-```
-
-## Apply Changes
-```bash
-terraform apply -var-file=envs/dev/terraform.tfvars
-```
-
-## Example: Adding a new user
-```bash
-users = {
-  "alice" = {}
-  "bob"   = {}
-  "carol" = {}
-}
-
-group_membership = {
-  "admins"  = ["alice"]
-  "readers" = ["bob", "carol"]
-}
 ```
 
 ## Run
@@ -73,7 +127,7 @@ terraform plan -var-file=envs/dev/terraform.tfvars
 terraform apply -var-file=envs/dev/terraform.tfvars
 ```
 
-## Output
+## Example Output
 ```bash
 https://youracct-dev.signin.aws.amazon.com/console
 ```

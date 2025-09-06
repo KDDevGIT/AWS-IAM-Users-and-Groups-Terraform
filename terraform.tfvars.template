@@ -1,0 +1,61 @@
+# WILL BE IGNORED IN GITHUB
+aws_region = "us-west-1"
+aws_profile = "bootstrap_admin"
+account_alias = "bucket-dev"
+
+# Define Password Policy
+password_policy = {
+    minimum_password_length = <NUMBER>
+    require_lowercase_characters = true/false
+    require_uppercase_characters = true/false
+    require_numbers = true/false
+    require_symbols = true/false
+    allow_users_to_change_password = true/false
+    hard_expiry = true/false
+    max_password_age = <NUMBER>
+    password_reuse_prevention = <NUMBER>
+}
+
+# Define Users 
+users = {
+    "USER" = { # Name 
+        pgp_key = null
+    }
+}
+
+# Define Groups
+groups = {
+    "ROLE" = {
+        attached_policies = ["aws:<AWS_GROUP_NAME>"]
+    }
+}
+
+
+# Custom Managed Policies
+managed_policies = {
+    "POLICY" = {
+        description = "Allow viewing billing info"
+        policy_json = jsonencode({
+            Version = "2012-10-17"
+            Statement = [{
+                Effect = "Allow"
+                Action = [""]
+                Resource = "*"
+            }]
+        })
+    }
+}
+
+# Group Membership (Define above)
+group_membership = {
+    "ROLE" = ["USER"]
+}
+
+# Toggle Global MFA Policy
+enforce_mfa_policy = true/false
+
+# Tags
+tags = {
+    project = "iam_baseline"
+    env = "dev"
+}
