@@ -45,7 +45,7 @@ region = "us-west-1"
 dynamodb_table = "iam-uag-table"
 encrypt = true
 ```
-## Example Configuration (TFVARS)
+## Example Configuration (terraform.tfvars)
 ## Header
 ```bash
 aws_region = "us-west-1"
