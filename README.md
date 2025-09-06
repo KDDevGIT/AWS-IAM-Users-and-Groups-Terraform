@@ -70,7 +70,7 @@ password_policy = {
 ## Define Users
 ```bash 
 users = {
-    "USER" = { # Name 
+    "USER" = {  
         pgp_key = null
     }
 }
@@ -87,7 +87,7 @@ groups = {
 ```bash
 managed_policies = {
     "POLICY" = {
-        description = "Allow viewing billing info"
+        description = "Some policy function"
         policy_json = jsonencode({
             Version = "2012-10-17"
             Statement = [{
