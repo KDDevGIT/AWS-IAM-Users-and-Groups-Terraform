@@ -27,7 +27,8 @@ aws s3api create-bucket \
 --bucket iam-users-and-groups \
 --region us-west-1 \
 --create-bucket-configuration LocationConstraint=us-west-1
-
+```
+```bash
 aws dynamodb create-table \
 --table-name iam-uag-table \
 --attribute-definitions AttributeName=LockID,AttributeType=S \
